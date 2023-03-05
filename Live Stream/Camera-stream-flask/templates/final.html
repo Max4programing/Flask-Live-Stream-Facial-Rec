@@ -1,0 +1,49 @@
+<center>
+<!DOCTYPE HTML>
+<html>
+
+<html lang="en">
+<head>
+<script type="text/javascript" src="gamescript.js"></script>
+<meta charset="UTF-8">
+<title>Password</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="content">
+
+
+
+<h1> Password</h1>
+
+<input id="Input" type="password">
+
+<button onclick="myFunction()">Submit</button>
+<p style="color:Green;" id="password1";></p>
+<p style="color:Red;" id="password2";></p>
+
+</div>
+<script>
+
+function myFunction(){
+    var password = document.getElementById("Input").value;
+    var el = document.getElementById('content');
+    var content;
+    if (password == "maxtheboss"){
+	
+	document.getElementById("password1").innerHTML = "Password is correct";
+	document.getElementById("content").innerHTML = "";
+	content = '<h1>Redirecting to Live Stream</h1><head><meta http-equiv="refresh" content="0; URL={{ url_for('cool_form') }}"/></head>';
+    }else{
+   	content = '<h1></h1>';
+	document.getElementById("password2").innerHTML = "Password is uncorrect";
+    }
+    el.insertAdjacentHTML('afterbegin', content);
+}
+
+	
+
+</script>
+</body>
+
+</html>

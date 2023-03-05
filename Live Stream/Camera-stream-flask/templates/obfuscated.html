@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8" />
+<head>
+<script type="text/javascript">
+
+var TAU = 2 * Math.PI;
+var INTERVAL = 20; // Update interval, in ms
+var canvas;
+var ctx;
+var width;
+var height;
+var root;
+var time;
+var timer;
+
+function Point(x, y)
+{
+  this.x = x;
+  this.y = y;
+}
+
+function Spinner(center, r, f, children, dir)
+{
+  var params = [r, f, children, dir];
+  var len = params[0].length;
+  var r;
+  var f;
+  var children;
+  var dir;
+  for (var i = 1; i < params.length; i++)
+  {
+    if (params[i].length == 0 || params[i].length != len)
+    {
+      this.center = new Point(center.x, center.y);
+      this.r = 0;
+      this.f = 0;
+      this.children = [];
+      this.dir = 1;
+      this.path = [];
+      this.level = 0;
+      return;
+    }
+  }
+  len -= 1;
+  this.center = new Point(center.x, center.y);
+  this.r = r[len];
+  this.f = f[len];
+  this.children = [];
+  this.dir = dir[len];
+  this.path = [];
+  this.level = len + 1;
+  
+  for (var i = 0; i < children[len]; i++)
+  {
+    var x = this.center.x + this.r * Math.cos(TAU * i / children[len]);
+    var y = this.center.y + this.r * Math.sin(TAU * i / children[len]);
+    console.log(x); console.log(y);
+    this.children.push(new Spinner(new Point(x, y), r.slice(0, len), f.slice(0, len), children.slice(0, len), dir.slice(0, len)));
+  }
+}
+
+Spinner.prototype.draw = function()
+{
+  var len = this.children.length;
+  if (len > 0)
+  {
+    ctx.beginPath();
+    ctx.arc(this.center.x, this.center.y, 5 * (this.level + 1), 0, TAU);
+    ctx.fill();
+    for (var i = 0; i < len; i++)
+    {
+      ctx.beginPath();
+      ctx.moveTo(this.center.x, this.center.y);
+      ctx.lineTo(this.children[i].center.x, this.children[i].center.y);
+      ctx.stroke();
+      this.children[i].draw();
+    }
+  }
+  else
+  {
+    var len = this.path.length;
+    if (len >= 2)
+    {
+      ctx.beginPath();
+      ctx.moveTo(this.path[0].x, this.path[0].y);
+      for (var i = 1; i < len; i++)
+      {
+        ctx.lineTo(this.path[i].x, this.path[i].y);
+      }
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(this.center.x, this.center.y, 5, 0, TAU);
+    ctx.fill();
+  }
+}
+
+Spinner.prototype.update = function(t)
+{
+  var len = this.children.length;
+  for (var i = 0; i < len; i++)
+  {
+    var child = this.children[i];
+    if (child.path.length > 500)
+      child.path.shift();
+    child.path.push(new Point(child.center.x, child.center.y));
+    child.center.x = this.center.x + this.r * Math.cos(TAU * (i / len + this.f * t * this.dir));
+    child.center.y = this.center.y + this.r * Math.sin(TAU * (i / len + this.f * t * this.dir));
+    child.update(t);
+  }
+}
+
+function init()
+{
+  canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
+  width = window.innerWidth * 0.95;
+  height = window.innerHeight * 0.5;
+  canvas.width = width;
+  canvas.height = height;
+  ctx.lineWidth = "2";
+  ctx.fillStyle = "#000000";
+}
+
+function beginAnimation()
+{
+  var params = document.getElementById("params").elements;
+  var r1 = params.namedItem("r1").value;
+  var r2 = params.namedItem("r2").value;
+  var arms = params.namedItem("arms").value;
+  var cars = params.namedItem("cars").value;
+  var f1 = params.namedItem("f1").value;
+  var f2 = params.namedItem("f2").value;
+  var bodyDirection = params.namedItem("bodyDirection").value;
+  var armDirection = params.namedItem("armDirection").value;
+
+  root = new Spinner(new Point(width / 2, height / 2), [r2, r1], [f2, f1], [cars, arms], [armDirection, bodyDirection]);
+  root.draw();
+
+  time = 0;
+  clearInterval(timer);
+  var timer = setInterval(update, INTERVAL);
+}
+
+function update()
+{
+  time += INTERVAL / 1000;
+  root.update(time);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  root.draw();
+}
+</script>
+</head>
+<body onload="init()">
+<div style="text-align:center" id="canvasDiv"><canvas id="canvas"></canvas></div>
+<form id="params">
+<label for="r1">R<sub>1</sub>:</label><input type="number" id="r1" step="any" min="0">
+<label for="r2">R<sub>2</sub>:</label><input type="number" id="r2" step="any" min="0">
+<label for="arms">Number of arms:</label><input type="number" id="arms" step="1" min="0">
+<label for="cars">Number of cars:</label><input type="number" id="cars" step="1" min="0">
+<label for="f1">f<sub>1</sub>:</label><input type="number" id="f1" step="any" min="0"> rev/s
+<label for="f2">f<sub>2</sub>:</label><input type="number" id="f2" step="any" min="0"> rev/s
+<label for="bodyDirection">Body spins:</label><select id="bodyDirection">
+  <option value="1">Clockwise</option>
+  <option value="-1">Counter-clockwise</option>
+</select>
+<label for="armDirection">Arms spin:</label><select id="armDirection">
+  <option value="1">Clockwise</option>
+  <option value="-1">Counter-clockwise</option>
+</select>
+<button type="button" id="begin" onclick="beginAnimation()">Begin</button>
+</form>
+</body>
+</html>

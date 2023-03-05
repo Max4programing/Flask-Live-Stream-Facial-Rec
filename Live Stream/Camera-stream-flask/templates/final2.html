@@ -1,0 +1,80 @@
+
+<html lang="en">
+
+<head>
+<center>
+<script type="text/javascript" src="gamescript.js"></script>
+<meta charset="UTF-8">
+<title>Password</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='password.js')}}"></script>
+<script src="{{url_for('static', filename='link.js')}}"></script>
+</head>
+<body>
+<script> 
+function DAD(){
+    var password = document.getElementById("Input").value;
+    var el = document.getElementById('content');
+    var content;
+    var spy;
+    
+    if (password == b){
+	spy = "go";
+	document.getElementById("password1").innerHTML = "Password is correct";
+	document.getElementById("content").innerHTML = "";
+    }else if(password == "chickenbutt"){
+   	spy = "fun"
+    	document.getElementById("content").innerHTML = "";
+    }else if(password == "secert"){
+   	spy = "secert"
+    	document.getElementById("content").innerHTML = "";
+    }else if(password == "plane"){
+   	spy = "fun2"
+    	document.getElementById("content").innerHTML = "";
+    }else if(password == "ligma"){
+   	spy = "fun1"
+    	document.getElementById("content").innerHTML = "";
+    }else{
+	spy = "no";
+    	document.getElementById("password2").innerHTML = "Password is incorrect";
+    }
+    if (spy == "go"){
+	content = '<h1>Redirecting to Live Stream</h1>';
+   	
+   	location.replace(link);
+    }else if (spy == "secert"){
+	content = '<h1>Redirecting to Live Stream</h1>';
+   	
+   	location.replace("/secert");
+    }else if(spy == "fun"){
+	content = '<h1>Redirecting to</h1><h1 style="color:rgb(255, 120, 0);">Chicken Butt</h1><img src="/static/funny.jpg" width="300" height="300"><head><meta http-equiv="refresh" content="2; URL=https://www.youtube.com/watch?v=OzzpMlTi5sg" /></head>';
+    }else if(spy == "fun1"){
+	content = '<h1>Really thought the password was: </h1><h1 style="color:rgb(0, 150, 225);">LIGMA.</h1><h1 style="color:rgb(12, 156, 41);"> If you did: </h1><div style="text-align: center"><img src="/static/em.gif" width="480" height="300"></div><h1 style="color:rgb(0, 150, 225);">Also:</h1><h1 style="color:rgb(255, 102, 0);"> Lig ma balls <h1><div style="text-align: center"><button style="height:50px;width:100px" onClick="window.location.reload();">Go Back</button></div>';
+    }else if(spy == "fun2"){
+	content = '<h1 style="color:rgb(255, 0, 0);">Play Flappy Plane !!!!!!!</h1><p>Please turn volume to high</p><iframe src="http://flappycreator.com/flappy.php?id=5f3c49bc07f94" height="1000" width="1000" title="Flappy Plane"></iframe><div><h1></h1><a href="http://flappycreator.com/flappy.php?id=5f3c49bc07f94">Link to game</a></div><h1></h1><div><button style="height:50px;width:100px" onClick="window.location.reload();">Go Back</button></div>';
+    	
+    }else{
+	content = '<h1></h1>';
+    }
+    el.insertAdjacentHTML('afterbegin', content);
+}
+</script>
+<div id="content">
+
+
+
+<h1> Password</h1>
+<h2 style="color:rgb(255, 0, 0);">Enter Password to See Live Stream</h2>
+<input id="Input" type="password">
+
+
+<button type="button" onclick="DAD()">Submit</button>
+ 
+<p style="color:Green;" id="password1";></p>
+<p style="color:Red;" id="password2";></p>
+
+</div>
+
+</body>
+
+</html>                                                                                          
